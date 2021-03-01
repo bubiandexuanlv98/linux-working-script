@@ -1,0 +1,11 @@
+#!/usr/bin/expect
+
+set timeout 30
+spawn ssh -l huyecheng 192.168.112.6
+expect "password:"
+send "2208718Hy#\r"
+expect "Opt> "
+send "p\r"
+
+# 执行完留在远程控制台，不加这句执行�
+interact
