@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# set -e 后面的代码，一旦出现非零结果，整个结果就会退出，防止有危险操作
+# set -e
+
+function info() {
+    # $1前面的那串是设置颜色的，$1后面的是用于关闭属性，如果不加后面的就全是这个颜色了
+    # $1是要输出的字符，$2是用来设置颜色的
+    echo -e "\033[$2m$1\033[0m"
+}
+
+# 注意参数不是写在括号里的，参数是直接写在调用函数的后面，用$1,$2...等来使用
+function doupload() {
+        local filename=$1 # local是局部变量的定义关键字
+        info "BEGIN TO UPLOAD file [$filename] ..." 33
+        curl -T $filename jms.miaopai.com/up/
+        if [ $? -ne 0 ]; then
+                info "UPLOAD FAILED" 31
+        else
+                info "UPLOAD DONE" 32
+        fi
+        # info # 打印空行
+}
+
+if [ $# -lt 1 ]; then
+        name=`basename $0`
+        echo "USAGE: $name filenames"
+        exit 1
+fi
+
+# $@是命令行的参数
+for arg in "$@" 
+do
+        doupload $arg
+done
